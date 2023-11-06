@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro e Login</title>
+   
+   <style>
+        .tab-content {
+            display: none;
+        }
+
+        .active-tab {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- //lista com as páginas de cadastro e login -->
+    <ul>
+        <li><a href="#" onclick="openTab(event, 'cadastro')">Cadastro</a></li>
+        <li><a href="#" onclick="openTab(event, 'login')">Login</a></li>
+    </ul>
+
+    <!-- //div com formulário de cadastro, aqui vocÊ pode adicionar os dados que forem necessário, como CPF, telefone e etc. -->
+    <div id="cadastro" class="tab-content">
+        <h2>Cadastro</h2>
+        <form id="cadastroForm">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <input type="submit" value="Cadastrar">
+        </form>
+    </div>
+
+    <!-- //div com formulário de login, aqui vocÊ pode adicionar os dados que forem necessário, como CPF, telefone e etc. -->
+    <div id="login" class="tab-content">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome2" name="nome" required><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email2" name="email" required><br><br>
+
+            <input type="submit" value="Entrar">
+        </form>
+    </div>
+
+    <!-- Códigos para salvar dados em cookies -->
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabContent, tabLinks;
+
+            // Ocultar todos os elementos de conteúdo das abas
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].style.display = "none";
+            }
+
+            // Remover a classe "active" de todos os links de abas
+            tabLinks = document.getElementsByTagName("a");
+            for (i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+            }
+
+            // Exibe o conteúdo da aba atual e adicionar a classe "active" ao link da aba
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+            // Se a aba "Login" for aberta, preencha os campos com dados dos cookies
+            if (tabName === 'login') {
+                preencherCamposComCookies();
+            }
+        }
+
+        // Função para salvar os dados de cadastro em cookies
+        function salvarDadosDeCadastroEmCookies() {
+            var nome = document.getElementById("nome").value;
+            var email = document.getElementById("email").value;
+
+            // Salvar os dados em cookies
+            document.cookie = "cadastro_nome=" + nome + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+            document.cookie = "cadastro_email=" + email + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+        }
+
+        // Função para preencher os campos de login com dados dos cookies
+        function preencherCamposComCookies() {
+            var cookies = document.cookie.split(';');
+            var index = 0;
+
+            function preencherCampo() {
+                if (index < cookies.length) {
+                    var cookie = cookies[index].trim().split('=');
+                    if (cookie[0] === "cadastro_nome") {
+                        document.getElementById("nome2").value = cookie[1];
+                    } else if (cookie[0] === "cadastro_email") {
+                        document.getElementById("email2").value = cookie[1];
+                    }
+
+                    index++;
+
+                    setTimeout(preencherCampo, 200);
+                }
+            }
+
+            
+            preencherCampo();
+
+        }
+
+        // Evento de envio do formulário de cadastro para salvar os dados em cookies assim que o cliente clicar em "submit"
+        document.getElementById("cadastroForm").addEventListener("submit", function (event) {
+            salvarDadosDeCadastroEmCookies();
+        });
+
+    </script>
+</body>
+
+</html>
